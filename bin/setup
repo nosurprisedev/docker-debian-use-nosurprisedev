@@ -15,6 +15,11 @@ set -eo pipefail
 
 ABBREV="$1"
 CODE_NAME="$2"
+OWNER='nosurprisedev'
+DISTRO='debian'
+DOCKER_IMAGE="ghcr.io/$OWNER/image-$DISTRO-$CODE_NAME-$ABBREV"
+DOCKER_CONTAINER="container-$DISTRO-$CODE_NAME-$ABBREV"
+
 shift # $2 becomes the new $1, $3 becomes the new $2, etc.
 shift
 
@@ -33,29 +38,37 @@ echo "Edition:                           $ABBREV"
 echo "Debian Code Name:                  $CODE_NAME"
 echo "All elements of ARRAY_PORTS:       ${ARRAY_PORTS[@]}"
 echo "Number of elements in ARRAY_PORTS: ${#ARRAY_PORTS[@]}"
+echo ''
+echo "Docker image: $DOCKER_IMAGE"
+echo "Docker container: $DOCKER_CONTAINER"
 
 ###############################################
 # FINISHED: setting environment variable inputs
 ###############################################
 
+####################################################################
+# BEGIN: setting up the scripts for using the Docker image/container 
+####################################################################
+
 # Creating the necessary directories
-WORK_DIR="tmp/$ABBREV/$SUITE"
+WORK_DIR="tmp/$ABBREV/$CODE_NAME"
+WORK_DOCKER="$WORK_DIR/docker"
 WORK_SHARED="$WORK_DIR/shared"
 mkdir -p $WORK_DIR
+mkdir -p $WORK_DOCKER
 mkdir -p $WORK_SHARED
 
+# Copying the bin/docker scripts
+cp -R bin/docker/* $WORK_DOCKER
+
+# Updating the Docker image and container names
+bin/replace-string-in-dir-recursive '<DOCKER_IMAGE>' "$DOCKER_IMAGE" "$WORK_DOCKER"
+
+#######################################################################
+# FINISHED: setting up the scripts for using the Docker image/container 
+#######################################################################
+
 exit 0
-
-##########################
-# BEGIN: copying use files
-##########################
-
-# Copy files for using Docker image/container
-cp templates_use/* $WORK_DIR
-
-#############################
-# FINISHED: copying use files
-#############################
 
 #############################
 # BEGIN: copying shared files
