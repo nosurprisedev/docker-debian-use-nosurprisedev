@@ -58,15 +58,23 @@ mkdir -p $WORK_DIR
 mkdir -p $WORK_DOCKER
 mkdir -p $WORK_SHARED
 
+# Copying the bin/working script
+cp -R bin/working/* $WORK_DIR
+
 # Copying the bin/docker scripts
 cp -R bin/docker/* $WORK_DOCKER
 
 # Updating the Docker image and container names
 bin/replace-string-in-dir-recursive '<DOCKER_IMAGE>' "$DOCKER_IMAGE" "$WORK_DOCKER"
+bin/replace-string-in-dir-recursive '<DOCKER_CONTAINER>' "$DOCKER_CONTAINER" "$WORK_DOCKER"
 
 #######################################################################
 # FINISHED: setting up the scripts for using the Docker image/container 
 #######################################################################
+
+echo '***************************************'
+echo 'Enter the following command to proceed:'
+echo "cd $WORK_DIR"
 
 exit 0
 
@@ -179,7 +187,3 @@ rm $WORK_DIR/container-create.sh.bak
 ############################
 # FINISHED: setting up ports
 ############################
-
-echo '***************************************'
-echo 'Enter the following command to proceed:'
-echo "cd $WORK_DIR"

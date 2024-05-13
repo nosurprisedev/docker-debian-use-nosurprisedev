@@ -24,3 +24,6 @@ jobs:
 
       - name: Setting up the scripts for using Docker
         run: bash $ABBREV_CI-$CODE_NAME_CI.sh
+
+      - name: Starting Docker
+        run: cd tmp/$ABBREV_CI/$CODE_NAME_CI && 
