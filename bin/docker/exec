@@ -1,11 +1,9 @@
 #!/bin/bash
 
-# NOTE: set -o pipefail is needed to ensure that any error or failure causes the whole pipeline to fail.
-# Without this specification, the CI status will provide a false sense of security by showing builds
-# as succeeding in spite of errors or failures.
 set -eo pipefail
 
-IS="$1"
+COMMAND="$1"
+DOCKER_IMAGE='<DOCKER_IMAGE>'
 DOCKER_CONTAINER='<DOCKER_CONTAINER>'
 
 # Check for regular user login
@@ -14,15 +12,42 @@ if [ ! $( id -u ) -ne 0 ]; then
   exit 2
 fi
 
-echo '******'
-echo 'NOTICE'
-echo 'If this docker/exec script does not work, then there is probably no'
-echo 'running container to join.'
-echo
+container_exec () {
+  echo '------------------------------------------'
+  echo "docker exec -it $DOCKER_CONTAINER $COMMAND"
+  docker exec -it $DOCKER_CONTAINER $COMMAND
+}
 
-echo '---------------------'
-echo 'Executing the command'
-echo "$IS"
-echo 'in the Docker container'
-wait
-docker exec -it $DOCKER_CONTAINER $IS
+container_start () {
+  echo '------------------------------'
+  echo "docker start $DOCKER_CONTAINER"
+  docker start $DOCKER_CONTAINER
+}
+
+container_run () {
+  echo '-----------------------------------------------------------'
+  echo "docker container run --name $DOCKER_CONTAINER $DOCKER_IMAGE"
+  docker container run --name $DOCKER_CONTAINER $DOCKER_IMAGE
+}
+
+container_create () {
+  COMMAND_LOCAL='pwd'
+  HS=$PWD/shared # Host machine shared directory
+  DIR_DOCKER_SHARED='/home/winner/shared' # Docker shared directory
+  echo '--------------------------------------------------------------'
+  echo "Creating Docker container $DOCKER_CONTAINER from $DOCKER_IMAGE"
+  # docker create -i -t -u='winner' --name $DOCKER_CONTAINER \
+    # PORT_SPECIFICATIONS_HERE \
+    # -e HOME=/home/winner -e USERNAME=winner \
+    # -v $hs:$ds $DOCKER_IMAGE $is
+
+  docker create -i -t -u='winner' --name $DOCKER_CONTAINER \
+    -e HOME=/home/winner -e USERNAME=winner \
+    -v $HS:$DIR_DOCKER_SHARED $DOCKER_IMAGE $COMMAND_LOCAL
+}
+
+container_exec_or_start () {
+  container_exec || ( container_start && container_exec)
+}
+
+container_exec_or_start

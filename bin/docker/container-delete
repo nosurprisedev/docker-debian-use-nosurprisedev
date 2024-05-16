@@ -1,0 +1,27 @@
+#!/bin/bash
+
+DOCKER_CONTAINER='<DOCKER_CONTAINER>'
+
+echo '-------------------------------------'
+echo "docker ps -a | grep $DOCKER_CONTAINER"
+docker ps -a | grep $DOCKER_CONTAINER
+wait
+
+set +e
+
+echo '-----------------------------------------------------------'
+echo "Killing and removing the $DOCKER_CONTAINER Docker container"
+for i in $(docker ps -a | grep $DOCKER_CONTAINER | awk '{print $1}')
+do
+  docker kill $i; wait;
+  docker rm -f $i; wait;
+done;
+
+set -e
+
+echo '-------------------------------------'
+echo "docker ps -a | grep $DOCKER_CONTAINER"
+docker ps -a | grep $DOCKER_CONTAINER
+wait
+
+wait
