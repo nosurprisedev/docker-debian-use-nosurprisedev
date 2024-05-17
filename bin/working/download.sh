@@ -1,5 +1,4 @@
 #!/bin/bash
 
 set -eo pipefail
-
-docker/download-image
+docker/image-download
