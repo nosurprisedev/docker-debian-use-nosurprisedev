@@ -2,4 +2,5 @@
 
 set -eo pipefail
 
-docker/image-download
+docker/image-delete
+docker/join
