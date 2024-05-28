@@ -48,9 +48,10 @@ do
 done;
 wait
 
-# NOTE: Without the "-l" flag, the default Ruby version is the one
-# installed with apt-get instead of the one installed with RVM.
-INITIAL_SCRIPT='/bin/bash -l' # Initial script to run
+# Create the new Docker container so that it runs the "sleep infinity"
+# command when started.
+# This keeps the Docker container up and running once started.
+INITIAL_SCRIPT='sleep infinity'
 DIR_SHARED_HOST=$PWD/shared # Host machine shared directory
 DIR_SHARED_DOCKER='/home/winner/shared' # Docker shared directory
 
@@ -108,6 +109,10 @@ then
   echo ''
 fi
 wait
+
+# NOTE: Without the "-l" flag, the default Ruby version is the one
+# installed with apt-get instead of the one installed with RVM.
+INITIAL_SCRIPT='/bin/bash -l' # Initial script to run
 
 # Entering the Docker container
 echo '-------------------------------------------------'
