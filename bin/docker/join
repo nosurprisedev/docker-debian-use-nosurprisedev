@@ -110,13 +110,24 @@ then
 fi
 wait
 
-# NOTE: Without the "-l" flag, the default Ruby version is the one
-# installed with apt-get instead of the one installed with RVM.
-INITIAL_SCRIPT='/bin/bash -l' # Initial script to run
+# Updating INITIAL_SCRIPT for entering the Docker container
+if [[ "$CI" == 'true' ]]
+then
+  INITIAL_SCRIPT='/usr/local/bin/check'
+else
+  # NOTE: Without the "-l" flag, the default Ruby version is the one
+  # installed with apt-get instead of the one installed with RVM.
+  INITIAL_SCRIPT='/bin/bash -l'
+fi
 
 # Entering the Docker container
-echo '-------------------------------------------------'
-echo "docker exec -it $DOCKER_CONTAINER $INITIAL_SCRIPT"
+echo '-------------'
+echo 'docker exec \'
+echo '  # i and t flags \'
+echo "  $DOCKER_CONTAINER $INITIAL_SCRIPT"
+
 wait
-docker exec -it $DOCKER_CONTAINER $INITIAL_SCRIPT
+docker exec \
+  # i and t flags \
+  $DOCKER_CONTAINER $INITIAL_SCRIPT
 wait
