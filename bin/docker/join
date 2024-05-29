@@ -11,7 +11,7 @@ DOCKER_CONTAINER='<DOCKER_CONTAINER>'
 
 echo ''
 echo '-------------------------------------------------------------'
-echo 'Checking for the presence of the Docker image ($DOCKER_IMAGE)'
+echo "Checking for the presence of the Docker image ($DOCKER_IMAGE)"
 echo ''
 for i in $(docker images -a | grep $DOCKER_IMAGE)
 do
