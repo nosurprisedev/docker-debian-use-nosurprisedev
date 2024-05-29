@@ -1,0 +1,45 @@
+#!/bin/bash
+
+set -eo pipefail
+
+DOCKER_CONTAINER='<DOCKER_CONTAINER>'
+
+echo '++++++++++++++++++++++++++++++++'
+echo 'BEGIN: deleting the Docker container'
+echo "$DOCKER_CONTAINER"
+echo '+++++++++++++++++'
+
+list_containers () {
+  echo '-------------------------------------'
+  echo "docker ps -a | grep $DOCKER_CONTAINER"
+  set +e
+  docker ps -a | grep $DOCKER_CONTAINER
+  set -e
+  wait
+}
+
+list_containers
+
+echo '-----------------------------------------------------------'
+echo "Killing and removing the $DOCKER_CONTAINER Docker container"
+for i in $(docker ps -a | grep $DOCKER_CONTAINER | awk '{print $1}')
+do
+  set +e
+  docker kill $i; wait;
+  docker rm -f $i; wait;
+  set -e
+done;
+
+list_containers
+
+for i in $(docker ps -a | grep $DOCKER_CONTAINER)
+do
+  echo 'ERROR: container not deleted'
+  exit 1
+done;
+wait
+
+echo '+++++++++++++++++++++++++++++++++++++++'
+echo 'FINISHED: deleting the Docker container'
+echo "$DOCKER_CONTAINER"
+echo '+++++++++++++++++'

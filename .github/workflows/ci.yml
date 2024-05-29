@@ -24,3 +24,21 @@ jobs:
 
       - name: Setting up the scripts for using Docker
         run: bash $ABBREV_CI-$CODE_NAME_CI.sh
+
+      - name: Starting the Docker container
+        run: cd tmp/$ABBREV_CI/$CODE_NAME_CI && bash join.sh
+
+      - name: Entering the Docker container in a second instance
+        run: cd tmp/$ABBREV_CI/$CODE_NAME_CI && bash join.sh
+
+      - name: Restarting the Docker container
+        run: cd tmp/$ABBREV_CI/$CODE_NAME_CI && bash restart.sh
+
+      - name: Resetting the Docker container
+        run: cd tmp/$ABBREV_CI/$CODE_NAME_CI && bash reset.sh
+
+      - name: Downloading the latest Docker image and starting the Docker container
+        run: cd tmp/$ABBREV_CI/$CODE_NAME_CI && bash download.sh
+
+      - name: Nuking all Docker containers and images
+        run: cd tmp/$ABBREV_CI/$CODE_NAME_CI && bash nuke.sh
