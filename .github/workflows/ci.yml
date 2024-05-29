@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         MATRIX_ABBREV: ['min-stage1']
-        MATRIX_CODE_NAME: ['bookworm', 'trixie']
+        MATRIX_CODE_NAME: ['bookworm', 'trixie', 'sid']
 
     env:
       CODE_NAME_CI: ${{ matrix.MATRIX_CODE_NAME }}
