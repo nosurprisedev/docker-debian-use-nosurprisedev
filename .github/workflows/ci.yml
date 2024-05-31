@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        MATRIX_ABBREV: ['min-stage1']
+        MATRIX_ABBREV: ['min-stage1', 'min-stage2']
         MATRIX_CODE_NAME: ['bookworm', 'trixie', 'sid']
 
     env:
